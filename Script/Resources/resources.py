@@ -14,8 +14,6 @@ class Credent:
 
     def __init__(self):
         self._pipelogin = None
-        self._maillogin = None
-        self._mailpass = None
         self._homedir = os.getcwd()[:-6]
         self.id_cards = []
         self.df_main = None
