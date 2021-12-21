@@ -1,5 +1,5 @@
 from Resources.resources import MessageModel
-
+import os
 
 def main():
     c = MessageModel()
@@ -15,7 +15,7 @@ def main():
     c.aprovadas()
     c.reprovados()
     c.relatorio_diario()
-
+    
 
 if __name__ == '__main__':
     main()

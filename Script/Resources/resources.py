@@ -1,8 +1,9 @@
 from cryptography.fernet import Fernet
 from .log_resources import LogMixim
+from time import sleep
 from datetime import date
+import webbrowser as web
 import pyautogui as rb
-import pywhatkit as py
 import requests, json
 import win32com.client
 import pandas as pd
@@ -66,6 +67,7 @@ class Credent:
             self._maillogin = str(ws.Range("B3").value)
             self._mailpass = str(ws.Range("B4").value)
             xlwb.Close(True)
+            os.system('taskkill /f /im excel.exe')
         except Exception as b:
             print(b)
 
@@ -310,6 +312,26 @@ class Report(DataBase):
 
 class MessageModel(Report):
 
+    def send_message(self, numero, message):
+        """
+        Abre o Chrome e envia a mensagem.
+        """
+        try:
+            print('Abrindo o Navegador')
+            web.open(f"https://web.whatsapp.com/send?phone={numero}&text={message}")
+            sleep(50)
+            rb.click()
+            sleep(2)
+            rb.press('enter')
+            sleep(3)
+            rb.hotkey('ctrl', 'w')
+            sleep(2)
+            rb.press('enter')
+            self.log_info(f'Envio de Mensaem com Sucesso!')
+        except Exception as b:
+            print(b)
+            self.log_erro(f'send_message_ {b}')
+
     def novas_solicitacoes(self):
         """
         Envio via Whattsapp das novas Solitações.
@@ -318,10 +340,8 @@ class MessageModel(Report):
             for k in self.lista_novas:
                 numero = str(k[1]).replace(' ', '').replace('-', '')
                 print(f'chave {k[0]} - telefone{numero} - mensagem {k[2]}')
-                py.sendwhatmsg_instantly (numero, k[2], 30, False, 10)
-                if rb.locateOnScreen(f'{self._homedir}My_docs\\send_whatss.PNG'):
-                    rb.click(rb.center(rb.locateOnScreen(f'{self._homedir}My_docs\\send_whatss.PNG')))
-                    os.system('taskkill /f /im chrome.exe')
+                #numero = '+5511976291011'
+                self.send_message(numero, k[2])
                 self.update_status_envio_nova(k[0])
             self.log_info(f'MessageModel_ {len(self.lista_novas)} enviadas')
         except Exception as b:
@@ -335,10 +355,8 @@ class MessageModel(Report):
             for k in self.lista_aprovado:
                 numero = str(k[1]).replace(' ', '').replace('-', '')
                 print(f'chave {k[0]} - telefone{numero} - mensagem {k[2]}')
-                py.sendwhatmsg_instantly (numero, k[2], 30, False, 10)
-                if rb.locateOnScreen(f'{self._homedir}My_docs\\send_whatss.PNG'):
-                    rb.click(rb.center(rb.locateOnScreen(f'{self._homedir}My_docs\\send_whatss.PNG')))
-                    os.system('taskkill /f /im chrome.exe')
+                #numero = '+5511976291011'
+                self.send_message(numero, k[2])
                 self.update_status_envio_aprov_rejei(k[0])
             self.log_info(f'MessageModel_ {len(self.lista_aprovado)} enviadas')
         except Exception as b:
@@ -352,10 +370,8 @@ class MessageModel(Report):
             for k in self.lista_reprovado:
                 numero = str(k[1]).replace(' ', '').replace('-', '')
                 print(f'chave {k[0]} - telefone{numero} - mensagem {k[2]}')
-                py.sendwhatmsg_instantly (numero, k[2], 30, False, 10)
-                if rb.locateOnScreen(f'{self._homedir}My_docs\\send_whatss.PNG'):
-                    rb.click(rb.center(rb.locateOnScreen(f'{self._homedir}My_docs\\send_whatss.PNG')))
-                    os.system('taskkill /f /im chrome.exe')
+                #numero = '+5511976291011'
+                self.send_message(numero, k[2])
                 self.update_status_envio_aprov_rejei(k[0])
             self.log_info(f'MessageModel_ {len(self.lista_reprovado)} enviadas')
         except Exception as b:
